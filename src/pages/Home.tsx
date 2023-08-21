@@ -1,6 +1,7 @@
 import { Flex } from '@mantine/core';
 
-import RepositoryCard from '../components/RepositoryCard';
+import userRepositoriesGroups from '../components/__mocks__/userRepositoriesGroups';
+import UserRepositoriesGroups from '../components/UserRepositoriesGroups';
 
 export default function Home() {
   return (
@@ -10,14 +11,11 @@ export default function Home() {
       gap="md"
       justify="center"
       mih={50}
+      p={16}
       w="100%"
       wrap="wrap"
     >
-      <RepositoryCard
-        description="Any description"
-        stars={45}
-        title="Repository 1"
-      />
+      <UserRepositoriesGroups groups={userRepositoriesGroups} />
     </Flex>
   );
 }

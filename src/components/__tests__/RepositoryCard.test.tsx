@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 
+import repository from '../__mocks__/repository';
 import RepositoryCard, { RepositoryCardProps } from '../RepositoryCard';
 
 function setup(props: RepositoryCardProps) {
@@ -8,15 +9,10 @@ function setup(props: RepositoryCardProps) {
 
 describe('RepositoryCard', () => {
   test('render repo information', async () => {
-    const props = {
-      title: 'Any title',
-      description: 'Any description',
-      stars: 4,
-    };
-    setup(props);
+    setup(repository);
 
-    await screen.findByText(props.title);
-    await screen.findByText(props.description);
-    await screen.findByText(props.stars);
+    await screen.findByText(repository.title);
+    await screen.findByText(repository.description);
+    await screen.findByText(repository.stars);
   });
 });

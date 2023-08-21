@@ -1,11 +1,9 @@
 import { Card, Flex, Text } from '@mantine/core';
 import { IconStarFilled } from '@tabler/icons-react';
 
-export interface RepositoryCardProps {
-  title: string;
-  description: string;
-  stars: number;
-}
+import { Repository } from '../types';
+
+export interface RepositoryCardProps extends Repository {}
 
 export default function RepositoryCard({
   title,
@@ -13,7 +11,14 @@ export default function RepositoryCard({
   stars,
 }: RepositoryCardProps) {
   return (
-    <Card bg="gray.1" px="sm" py="xs" radius="xs" w="100%">
+    <Card
+      bg="gray.1"
+      data-testid="RepositoryCard"
+      px="sm"
+      py="xs"
+      radius="xs"
+      w="100%"
+    >
       <Flex align="center" justify="space-between">
         <Text weight="bold">{title}</Text>
         <Flex align="center">
