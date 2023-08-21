@@ -14,6 +14,7 @@ describe('RepositoryCard', () => {
       name: userRepositoriesResponse[0].name,
       description: userRepositoriesResponse[0].description,
       stargazersCount: userRepositoriesResponse[0].stargazers_count,
+      url: userRepositoriesResponse[0].html_url,
     };
     setup(props);
 
