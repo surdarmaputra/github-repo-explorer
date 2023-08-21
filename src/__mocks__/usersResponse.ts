@@ -1,4 +1,5 @@
-import { UsersResponse, UserType } from '../types';
+import { UserType } from '@/types/enums';
+import UsersResponse from '@/types/UserResponse';
 
 const usersResponse: UsersResponse = {
   total_count: 130150,

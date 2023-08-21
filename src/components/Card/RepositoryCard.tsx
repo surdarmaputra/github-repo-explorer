@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { Anchor, Card, Flex, Text, TextProps } from '@mantine/core';
 import { IconStarFilled } from '@tabler/icons-react';
 
-import { Repository } from '@/types';
+import Repository from '@/types/Repository';
 
 const StyledNonShrinkText = styled(Text)<TextProps>`
   flex-shrink: 0;

@@ -4,11 +4,12 @@ import { Alert, Flex, Text, Title } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconAlertCircle } from '@tabler/icons-react';
 
+import UserSearchFormValue from '@/types/form/UserSearchFormValue';
+
 import useSearchUsers from '../api/useSearchUsers';
 import GeneralRequestErrorAlert from '../components/Alert/GeneralRequestErrorAlert';
 import UserSearchForm from '../components/Form/UserSearchForm';
 import UserRepositoriesGroups from '../components/UserRepositoriesGroups';
-import { UserSearchFormValue } from '../types';
 
 export default function Home() {
   const isLargeScreen = useMediaQuery('(min-width: 480px)');
