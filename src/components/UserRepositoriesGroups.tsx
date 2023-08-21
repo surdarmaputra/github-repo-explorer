@@ -38,7 +38,7 @@ export default function UserRepositoriesGroups({
           >
             <Accordion.Control>{username}</Accordion.Control>
             <Accordion.Panel>
-              <Flex direction="column" gap="sm" mt="xs">
+              <Flex direction="column" gap="xs" mt="xs">
                 {repositories.length ? (
                   repositories.map(({ title, description, stars }) => (
                     <RepositoryCard
