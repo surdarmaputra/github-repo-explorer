@@ -1,8 +1,8 @@
-import { Accordion, Alert, createStyles, Flex } from '@mantine/core';
-import { IconAlertCircle } from '@tabler/icons-react';
+import { useState } from 'react';
 
-import { UserRepositoriesGroup } from '../types';
-import RepositoryCard from './RepositoryCard';
+import { Accordion, createStyles, Flex } from '@mantine/core';
+
+import UserRepositoriesGroup from './UserRepositoriesGroup';
 
 const useStyles = createStyles((theme) => ({
   item: {
@@ -17,45 +17,31 @@ const useStyles = createStyles((theme) => ({
 }));
 
 export interface UserRepositoriesGroupsProps {
-  groups?: UserRepositoriesGroup[];
+  usernames: string[];
 }
 
 export default function UserRepositoriesGroups({
-  groups = [],
+  usernames = [],
 }: UserRepositoriesGroupsProps) {
   const { classes } = useStyles();
+  const [activeAccordion, setActiveAccordion] = useState<string | null>(null);
 
-  if (!groups?.length) return null;
+  if (!usernames?.length) return null;
 
   return (
-    <Accordion classNames={classes} w="100%">
+    <Accordion
+      classNames={classes}
+      onChange={setActiveAccordion}
+      value={activeAccordion}
+      w="100%"
+    >
       <Flex direction="column" gap="sm">
-        {groups.map(({ repositories, username }) => (
-          <Accordion.Item
-            data-testid="UserRepositoriesGroup"
+        {usernames.map((username) => (
+          <UserRepositoriesGroup
+            isActive={activeAccordion === username}
             key={username}
-            value={username}
-          >
-            <Accordion.Control>{username}</Accordion.Control>
-            <Accordion.Panel>
-              <Flex direction="column" gap="xs" mt="xs">
-                {repositories.length ? (
-                  repositories.map(({ title, description, stars }) => (
-                    <RepositoryCard
-                      description={description}
-                      key={title}
-                      stars={stars}
-                      title={title}
-                    />
-                  ))
-                ) : (
-                  <Alert color="gray" icon={<IconAlertCircle size="1rem" />}>
-                    No repository
-                  </Alert>
-                )}
-              </Flex>
-            </Accordion.Panel>
-          </Accordion.Item>
+            username={username}
+          />
         ))}
       </Flex>
     </Accordion>

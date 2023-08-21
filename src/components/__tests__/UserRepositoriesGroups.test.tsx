@@ -1,9 +1,12 @@
 import { render, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
-import userRepositoriesGroups from '../__mocks__/userRepositoriesGroups';
+import userRepositoriesResponse from '../../__mocks__/userRepositoriesResponse';
 import UserRepositoriesGroups, {
   UserRepositoriesGroupsProps,
 } from '../UserRepositoriesGroups';
+
+const usernamesMock = ['username1', 'userwithoutrepo'];
 
 function setup(props: UserRepositoriesGroupsProps) {
   return render(<UserRepositoriesGroups {...props} />);
@@ -11,49 +14,35 @@ function setup(props: UserRepositoriesGroupsProps) {
 
 describe('UserRepositoriesGroups', () => {
   test('render correct amount of group', async () => {
-    setup({ groups: userRepositoriesGroups });
+    setup({ usernames: usernamesMock });
     const groups = await screen.findAllByTestId('UserRepositoriesGroup');
-    expect(groups.length).toBe(userRepositoriesGroups.length);
+    expect(groups.length).toBe(usernamesMock.length);
+  });
+
+  test('get repositories when user clicks a group', async () => {
+    const view = userEvent.setup();
+    setup({ usernames: usernamesMock });
+    const groups = await screen.findAllByTestId('UserRepositoriesGroup');
+
+    await view.click(screen.getByText(usernamesMock[0]));
+    const group = within(groups[0]);
+    const repositories = await group.findAllByTestId('RepositoryCard');
+    expect(repositories.length).toBe(userRepositoriesResponse.length);
+    within(repositories[0]).getByText(userRepositoriesResponse[0].name);
+    within(repositories[0]).getByText(userRepositoriesResponse[0].description);
+    within(repositories[0]).getByText(
+      userRepositoriesResponse[0].stargazers_count,
+    );
   });
 
   test('render empty repo', async () => {
-    setup({ groups: userRepositoriesGroups });
+    const view = userEvent.setup();
+    setup({ usernames: usernamesMock });
     const groups = await screen.findAllByTestId('UserRepositoriesGroup');
-    const groupWithEmptyRepo = within(groups[0]);
-    const mockData = userRepositoriesGroups[0];
 
-    groupWithEmptyRepo.getByText(mockData.username);
-    groupWithEmptyRepo.getByText(/No repository/);
-  });
-
-  test('render single repo', async () => {
-    setup({ groups: userRepositoriesGroups });
-    const groups = await screen.findAllByTestId('UserRepositoriesGroup');
-    const groupWithRepo = within(groups[1]);
-    const mockData = userRepositoriesGroups[1];
-
-    groupWithRepo.getByText(mockData.username);
-    const repositories = groupWithRepo.getAllByTestId('RepositoryCard');
-    expect(repositories.length).toBe(mockData.repositories.length);
-    within(repositories[0]).getByText(mockData.repositories[0].title);
-    within(repositories[0]).getByText(mockData.repositories[0].description);
-    within(repositories[0]).getByText(mockData.repositories[0].stars);
-  });
-
-  test('render multiple repo', async () => {
-    setup({ groups: userRepositoriesGroups });
-    const groups = await screen.findAllByTestId('UserRepositoriesGroup');
-    const groupWithRepo = within(groups[2]);
-    const mockData = userRepositoriesGroups[2];
-
-    groupWithRepo.getByText(mockData.username);
-    const repositories = groupWithRepo.getAllByTestId('RepositoryCard');
-    expect(repositories.length).toBe(mockData.repositories.length);
-    within(repositories[0]).getByText(mockData.repositories[0].title);
-    within(repositories[0]).getByText(mockData.repositories[0].description);
-    within(repositories[0]).getByText(mockData.repositories[0].stars);
-    within(repositories[1]).getByText(mockData.repositories[1].title);
-    within(repositories[1]).getByText(mockData.repositories[1].description);
-    within(repositories[1]).getByText(mockData.repositories[1].stars);
+    await view.click(screen.getByText(usernamesMock[1]));
+    const group = within(groups[1]);
+    await group.findByText(/No repository/);
+    expect(group.queryByTestId('RepositoryCard')).toBeFalsy();
   });
 });

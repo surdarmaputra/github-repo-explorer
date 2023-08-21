@@ -1,12 +1,28 @@
-import { Button, Flex, Input } from '@mantine/core';
-import { useMediaQuery } from '@mantine/hooks';
-import { IconSearch } from '@tabler/icons-react';
+import { useState } from 'react';
 
-import userRepositoriesGroups from '../components/__mocks__/userRepositoriesGroups';
+import { Alert, Flex } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
+import { IconAlertCircle } from '@tabler/icons-react';
+
+import useSearchUsers from '../api/useSearchUsers';
+import GeneralRequestErrorAlert from '../components/Alert/GeneralRequestErrorAlert';
+import UserSearchForm from '../components/Form/UserSearchForm';
 import UserRepositoriesGroups from '../components/UserRepositoriesGroups';
+import { UserSearchFormValue } from '../types';
 
 export default function Home() {
-  const largeScreen = useMediaQuery('(min-width: 480px)');
+  const isLargeScreen = useMediaQuery('(min-width: 480px)');
+  const [searchFilters, setSearchFilters] = useState<UserSearchFormValue>({
+    keyword: '',
+  });
+  const { users, isUsersLoading, usersError, refetchUsers } = useSearchUsers(
+    searchFilters.keyword,
+  );
+
+  const usernames = users?.map(({ login }) => login) || [];
+  const isError = !isUsersLoading && Boolean(usersError);
+  const isEmptyResult =
+    !isUsersLoading && !isError && Array.isArray(users) && !users.length;
 
   return (
     <Flex
@@ -17,21 +33,31 @@ export default function Home() {
       m="0 auto"
       mih={50}
       p={16}
-      w={largeScreen ? '480px' : '100%'}
+      w={isLargeScreen ? '480px' : '100%'}
       wrap="wrap"
     >
-      <Flex align="center" direction="column" gap="xs" mb="xs" w="100%">
-        <Input
-          placeholder="Enter username"
-          size="md"
-          variant="filled"
+      <UserSearchForm
+        isLoading={isUsersLoading}
+        onChange={setSearchFilters}
+        value={searchFilters}
+      />
+
+      {isEmptyResult && (
+        <Alert
+          color="gray"
+          icon={<IconAlertCircle size="1rem" />}
+          title="No Result"
           w="100%"
-        />
-        <Button leftIcon={<IconSearch size={16} />} size="md" w="100%">
-          Search
-        </Button>
-      </Flex>
-      <UserRepositoriesGroups groups={userRepositoriesGroups} />
+        >
+          Please try another username.
+        </Alert>
+      )}
+
+      {isError && <GeneralRequestErrorAlert onRetry={refetchUsers} />}
+
+      {Boolean(usernames?.length) && (
+        <UserRepositoriesGroups usernames={usernames} />
+      )}
     </Flex>
   );
 }
