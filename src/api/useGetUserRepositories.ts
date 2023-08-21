@@ -4,7 +4,7 @@ import { Repository } from '../types';
 import swrFetcher from '../utils/swrFetcher';
 
 interface UseGetUserRepositoriesResult {
-  repositories: Repository[];
+  repositories: Repository[] | undefined;
   isRepositoriesLoading: SWRResponse['isLoading'];
   repositoriesError: SWRResponse['error'];
   refetchRepositories: SWRResponse['mutate'];
@@ -15,23 +15,16 @@ export default function useGetUserRepositories(
 ): UseGetUserRepositoriesResult {
   const url = `https://api.github.com/users/${username}/repos`;
 
-  const { data, error, isLoading, mutate } = useSWR(
+  const { data, error, isLoading, mutate } = useSWR<Repository[]>(
     username ? url : null,
     swrFetcher,
     {
       revalidateOnFocus: false,
     },
   );
-  const repositories: Repository[] = data?.map(
-    (repository: Record<string, string>) => ({
-      title: repository.name,
-      description: repository.description,
-      stars: repository.stargazers_count,
-    }),
-  );
 
   return {
-    repositories,
+    repositories: data,
     repositoriesError: error,
     isRepositoriesLoading: isLoading,
     refetchRepositories: mutate,

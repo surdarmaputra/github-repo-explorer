@@ -2,8 +2,8 @@ import { Accordion, Alert, Flex, Skeleton } from '@mantine/core';
 import { IconAlertCircle } from '@tabler/icons-react';
 
 import useGetUserRepositories from '../api/useGetUserRepositories';
-import GeneralRequestErrorAlert from './GeneralRequestErrorAlert';
-import RepositoryCard from './RepositoryCard';
+import GeneralRequestErrorAlert from './Alert/GeneralRequestErrorAlert';
+import RepositoryCard from './Card/RepositoryCard';
 
 export interface UserRepositoriesGroupProps {
   isActive: boolean;
@@ -57,14 +57,21 @@ export default function UserRepositoriesGroup({
           )}
 
           {Boolean(repositories?.length) &&
-            repositories.map(({ title, description, stars }) => (
-              <RepositoryCard
-                description={description}
-                key={title}
-                stars={stars}
-                title={title}
-              />
-            ))}
+            repositories?.map(
+              ({
+                id,
+                name,
+                description,
+                stargazers_count: stargazersCount,
+              }) => (
+                <RepositoryCard
+                  description={description}
+                  key={id}
+                  name={name}
+                  stargazersCount={stargazersCount}
+                />
+              ),
+            )}
         </Flex>
       </Accordion.Panel>
     </Accordion.Item>

@@ -5,9 +5,9 @@ import { useMediaQuery } from '@mantine/hooks';
 import { IconAlertCircle } from '@tabler/icons-react';
 
 import useSearchUsers from '../api/useSearchUsers';
-import GeneralRequestErrorAlert from '../components/GeneralRequestErrorAlert';
+import GeneralRequestErrorAlert from '../components/Alert/GeneralRequestErrorAlert';
+import UserSearchForm from '../components/Form/UserSearchForm';
 import UserRepositoriesGroups from '../components/UserRepositoriesGroups';
-import UserSearchForm from '../components/UserSearchForm';
 import { UserSearchFormValue } from '../types';
 
 export default function Home() {
@@ -19,7 +19,7 @@ export default function Home() {
     searchFilters.keyword,
   );
 
-  const usernames = users?.map(({ login }) => login);
+  const usernames = users?.map(({ login }) => login) || [];
   const isError = !isUsersLoading && Boolean(usersError);
   const isEmptyResult =
     !isUsersLoading && !isError && Array.isArray(users) && !users.length;
