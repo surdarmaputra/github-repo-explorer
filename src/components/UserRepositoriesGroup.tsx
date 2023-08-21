@@ -2,6 +2,7 @@ import { Accordion, Alert, Flex, Skeleton } from '@mantine/core';
 import { IconAlertCircle } from '@tabler/icons-react';
 
 import useGetUserRepositories from '../api/useGetUserRepositories';
+import GeneralRequestErrorAlert from './GeneralRequestErrorAlert';
 import RepositoryCard from './RepositoryCard';
 
 export interface UserRepositoriesGroupProps {
@@ -13,9 +14,18 @@ export default function UserRepositoriesGroup({
   isActive,
   username,
 }: UserRepositoriesGroupProps) {
-  const { repositories, isRepositoriesLoading } = useGetUserRepositories(
-    isActive ? username : '',
-  );
+  const {
+    repositories,
+    isRepositoriesLoading,
+    refetchRepositories,
+    repositoriesError,
+  } = useGetUserRepositories(isActive ? username : '');
+  const isError = !isRepositoriesLoading && Boolean(repositoriesError);
+  const isEmptyResult =
+    !isRepositoriesLoading &&
+    !isError &&
+    Array.isArray(repositories) &&
+    !repositories.length;
 
   if (!username) return null;
 
@@ -35,22 +45,25 @@ export default function UserRepositoriesGroup({
             </>
           )}
 
-          {!isRepositoriesLoading && !repositories?.length && (
+          {isEmptyResult && (
             <Alert color="gray" icon={<IconAlertCircle size="1rem" />}>
               No repository
             </Alert>
           )}
 
-          {repositories.length
-            ? repositories.map(({ title, description, stars }) => (
-                <RepositoryCard
-                  description={description}
-                  key={title}
-                  stars={stars}
-                  title={title}
-                />
-              ))
-            : null}
+          {isError && (
+            <GeneralRequestErrorAlert onRetry={refetchRepositories} />
+          )}
+
+          {Boolean(repositories?.length) &&
+            repositories.map(({ title, description, stars }) => (
+              <RepositoryCard
+                description={description}
+                key={title}
+                stars={stars}
+                title={title}
+              />
+            ))}
         </Flex>
       </Accordion.Panel>
     </Accordion.Item>

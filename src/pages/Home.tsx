@@ -1,20 +1,27 @@
 import { useState } from 'react';
 
-import { Flex } from '@mantine/core';
+import { Alert, Flex } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
+import { IconAlertCircle } from '@tabler/icons-react';
 
 import useSearchUsers from '../api/useSearchUsers';
+import GeneralRequestErrorAlert from '../components/GeneralRequestErrorAlert';
 import UserRepositoriesGroups from '../components/UserRepositoriesGroups';
 import UserSearchForm from '../components/UserSearchForm';
 import { UserSearchFormValue } from '../types';
 
 export default function Home() {
-  const largeScreen = useMediaQuery('(min-width: 480px)');
+  const isLargeScreen = useMediaQuery('(min-width: 480px)');
   const [searchFilters, setSearchFilters] = useState<UserSearchFormValue>({
     keyword: '',
   });
-  const { users, isUsersLoading } = useSearchUsers(searchFilters.keyword);
+  const { users, isUsersLoading, usersError, refetchUsers } = useSearchUsers(
+    searchFilters.keyword,
+  );
   const usernames = users?.map(({ login }) => login);
+  const isError = !isUsersLoading && Boolean(usersError);
+  const isEmptyResult =
+    !isUsersLoading && !isError && Array.isArray(users) && !users.length;
 
   return (
     <Flex
@@ -25,7 +32,7 @@ export default function Home() {
       m="0 auto"
       mih={50}
       p={16}
-      w={largeScreen ? '480px' : '100%'}
+      w={isLargeScreen ? '480px' : '100%'}
       wrap="wrap"
     >
       <UserSearchForm
@@ -33,7 +40,23 @@ export default function Home() {
         onChange={setSearchFilters}
         value={searchFilters}
       />
-      <UserRepositoriesGroups usernames={usernames} />
+
+      {isEmptyResult && (
+        <Alert
+          color="gray"
+          icon={<IconAlertCircle size="1rem" />}
+          title="No Result"
+          w="100%"
+        >
+          Please try another username.
+        </Alert>
+      )}
+
+      {isError && <GeneralRequestErrorAlert onRetry={refetchUsers} />}
+
+      {Boolean(usernames?.length) && (
+        <UserRepositoriesGroups usernames={usernames} />
+      )}
     </Flex>
   );
 }
