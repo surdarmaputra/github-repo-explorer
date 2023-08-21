@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Button, Flex, Input } from '@mantine/core';
 import { IconSearch } from '@tabler/icons-react';
 
-import { UserSearchFormValue } from '../../types';
+import { UserSearchFormValue } from '@/types';
 
 export interface UserSearchFormProps {
   isLoading?: boolean;

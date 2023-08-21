@@ -16,32 +16,32 @@ jobs:
       - name: Install dependencies
         uses: ./.github/actions/cache-dependencies
   lint:
-      needs: install-dependencies
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v2
-        - name: Use cached dependencies
-          uses: ./.github/actions/cache-dependencies
-        - uses: jitterbit/get-changed-files@v1
-          id: get-changed-files
-          continue-on-error: true
-          with:
-            format: space-delimited
-            token: ${{ secrets.GITHUB_TOKEN }}
-        - name: Lint and annotate
-          id: lint
-          if: steps.get-changed-files.outputs.added_modified
-          env:
-            FILES: ${{ steps.get-changed-files.outputs.added_modified }}
-          run: |
-            FILTERED_FILES="$(echo $FILES | tr " " "\n" | grep -E "src/(.*)\.(ts|tsx)$" || true)"
-            yarn lint-gh-action $FILTERED_FILES
-    test:
-      needs: install-dependencies
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v3
-        - name: Use cached dependencies
-          uses: ./.github/actions/cache-dependencies
-        - name: Test
-          run: yarn test:coverage
+    needs: install-dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use cached dependencies
+        uses: ./.github/actions/cache-dependencies
+      - uses: jitterbit/get-changed-files@v1
+        id: get-changed-files
+        continue-on-error: true
+        with:
+          format: space-delimited
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Lint and annotate
+        id: lint
+        if: steps.get-changed-files.outputs.added_modified
+        env:
+          FILES: ${{ steps.get-changed-files.outputs.added_modified }}
+        run: |
+          FILTERED_FILES="$(echo $FILES | tr " " "\n" | grep -E "src/(.*)\.(ts|tsx)$" || true)"
+          yarn lint-gh-action $FILTERED_FILES
+  test:
+    needs: install-dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use cached dependencies
+        uses: ./.github/actions/cache-dependencies
+      - name: Test
+        run: yarn test:coverage

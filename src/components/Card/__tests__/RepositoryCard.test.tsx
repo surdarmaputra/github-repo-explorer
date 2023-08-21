@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 
-import userRepositoriesResponse from '../../../__mocks__/userRepositoriesResponse';
+import userRepositoriesResponse from '@/__mocks__/userRepositoriesResponse';
+
 import RepositoryCard, { RepositoryCardProps } from '../RepositoryCard';
 
 function setup(props: RepositoryCardProps) {

@@ -1,7 +1,8 @@
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import userRepositoriesResponse from '../../__mocks__/userRepositoriesResponse';
+import userRepositoriesResponse from '@/__mocks__/userRepositoriesResponse';
+
 import UserRepositoriesGroups, {
   UserRepositoriesGroupsProps,
 } from '../UserRepositoriesGroups';
