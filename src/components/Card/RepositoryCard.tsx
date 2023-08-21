@@ -40,7 +40,7 @@ export default function RepositoryCard({
           <StyledNonShrinkText weight="bold">
             {stargazersCount}
           </StyledNonShrinkText>
-          <IconStarFilled size={20} style={{ paddingBottom: '0.35rem' }} />
+          <IconStarFilled size={20} style={{ paddingBottom: '0.15rem' }} />
         </Flex>
       </Flex>
 
