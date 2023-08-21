@@ -1,85 +1,18 @@
-export interface UserSearchFormValue {
-  keyword: string;
-}
+import RepositoryLicense from './RepositoryLicense';
+import RepositoryOwner from './RepositoryOwner';
 
 /**
- * GitHub User Response
- * URL: https://api.github.com/search/users?q=<keyword>&per_page=<limit>
- * Generated from: https://app.quicktype.io/
- * */
-export enum UserType {
-  Organization = 'Organization',
-  User = 'User',
-}
-
-export interface User {
-  login: string;
-  id: number;
-  node_id: string;
-  avatar_url: string;
-  gravatar_id: string;
-  url: string;
-  html_url: string;
-  followers_url: string;
-  following_url: string;
-  gists_url: string;
-  starred_url: string;
-  subscriptions_url: string;
-  organizations_url: string;
-  repos_url: string;
-  events_url: string;
-  received_events_url: string;
-  type: UserType;
-  site_admin: boolean;
-  score: number;
-}
-export interface UsersResponse {
-  total_count: number;
-  incomplete_results: boolean;
-  items: User[];
-}
-/** === End of GitHub User Response === */
-
-/**
- * GitHub User's Repositories Response
+ * GitHub User's Repository
  * URL: https://api.github.com/users/<username>/repos
  * Generated from: https://app.quicktype.io/
  * */
-export interface License {
-  key: string;
-  name: string;
-  spdx_id: string;
-  url: null;
-  node_id: string;
-}
-
-export interface Owner {
-  login: string;
-  id: number;
-  node_id: string;
-  avatar_url: string;
-  gravatar_id: string;
-  url: string;
-  html_url: string;
-  followers_url: string;
-  following_url: string;
-  gists_url: string;
-  starred_url: string;
-  subscriptions_url: string;
-  organizations_url: string;
-  repos_url: string;
-  events_url: string;
-  received_events_url: string;
-  type: string;
-  site_admin: boolean;
-}
-export interface Repository {
+export default interface Repository {
   id: number;
   node_id: string;
   name: string;
   full_name: string;
   private: boolean;
-  owner: Owner;
+  owner: RepositoryOwner;
   html_url: string;
   description: string;
   fork: boolean;
@@ -143,7 +76,7 @@ export interface Repository {
   archived: boolean;
   disabled: boolean;
   open_issues_count: number;
-  license: License | null;
+  license: RepositoryLicense | null;
   allow_forking: boolean;
   is_template: boolean;
   web_commit_signoff_required: boolean;
@@ -154,4 +87,3 @@ export interface Repository {
   watchers: number;
   default_branch: string;
 }
-/** === End of GitHub User's Repositories Response === */

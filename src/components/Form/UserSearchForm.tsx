@@ -1,10 +1,9 @@
-// import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 import { Button, Flex, Input } from '@mantine/core';
 import { IconSearch } from '@tabler/icons-react';
 
-import { UserSearchFormValue } from '@/types';
+import UserSearchFormValue from '@/types/form/UserSearchFormValue';
 
 import FullWidthForm from './FullWidthForm';
 

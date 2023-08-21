@@ -1,14 +1,15 @@
 import { useState } from 'react';
 
-import { Alert, Flex } from '@mantine/core';
+import { Alert, Flex, Text, Title } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconAlertCircle } from '@tabler/icons-react';
+
+import UserSearchFormValue from '@/types/form/UserSearchFormValue';
 
 import useSearchUsers from '../api/useSearchUsers';
 import GeneralRequestErrorAlert from '../components/Alert/GeneralRequestErrorAlert';
 import UserSearchForm from '../components/Form/UserSearchForm';
 import UserRepositoriesGroups from '../components/UserRepositoriesGroups';
-import { UserSearchFormValue } from '../types';
 
 export default function Home() {
   const isLargeScreen = useMediaQuery('(min-width: 480px)');
@@ -36,6 +37,15 @@ export default function Home() {
       w={isLargeScreen ? '480px' : '100%'}
       wrap="wrap"
     >
+      <Title align="center" size="h1">
+        <Text color="blue.8" display="inline" size="md">
+          GitHub Repo
+        </Text>
+        <Text color="gray.8" display="inline" size="md">
+          &nbsp;Explorer
+        </Text>
+      </Title>
+
       <UserSearchForm
         isLoading={isUsersLoading}
         onChange={setSearchFilters}
@@ -49,14 +59,20 @@ export default function Home() {
           title="No Result"
           w="100%"
         >
-          Please try another username.
+          <Text color="gray.6">
+            Nothing found for &quot;{searchFilters?.keyword}&quot;. Please try
+            another username.
+          </Text>
         </Alert>
       )}
 
       {isError && <GeneralRequestErrorAlert onRetry={refetchUsers} />}
 
       {Boolean(usernames?.length) && (
-        <UserRepositoriesGroups usernames={usernames} />
+        <UserRepositoriesGroups
+          keyword={searchFilters?.keyword}
+          usernames={usernames}
+        />
       )}
     </Flex>
   );

@@ -8,6 +8,7 @@ import UserRepositoriesGroups, {
 } from '../UserRepositoriesGroups';
 
 const usernamesMock = ['username1', 'userwithoutrepo'];
+const keywordMock = 'user';
 
 function setup(props: UserRepositoriesGroupsProps) {
   return render(<UserRepositoriesGroups {...props} />);
@@ -15,14 +16,15 @@ function setup(props: UserRepositoriesGroupsProps) {
 
 describe('UserRepositoriesGroups', () => {
   test('render correct amount of group', async () => {
-    setup({ usernames: usernamesMock });
+    setup({ keyword: keywordMock, usernames: usernamesMock });
+    await screen.findByText(/Showing users for "user"/);
     const groups = await screen.findAllByTestId('UserRepositoriesGroup');
     expect(groups.length).toBe(usernamesMock.length);
   });
 
   test('get repositories when user clicks a group', async () => {
     const view = userEvent.setup();
-    setup({ usernames: usernamesMock });
+    setup({ keyword: keywordMock, usernames: usernamesMock });
     const groups = await screen.findAllByTestId('UserRepositoriesGroup');
 
     await view.click(screen.getByText(usernamesMock[0]));
@@ -38,7 +40,7 @@ describe('UserRepositoriesGroups', () => {
 
   test('render empty repo', async () => {
     const view = userEvent.setup();
-    setup({ usernames: usernamesMock });
+    setup({ keyword: keywordMock, usernames: usernamesMock });
     const groups = await screen.findAllByTestId('UserRepositoriesGroup');
 
     await view.click(screen.getByText(usernamesMock[1]));

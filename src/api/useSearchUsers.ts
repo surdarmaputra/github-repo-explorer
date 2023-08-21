@@ -1,6 +1,8 @@
 import useSWR, { SWRResponse } from 'swr';
 
-import { User, UsersResponse } from '../types';
+import User from '@/types/User';
+import UsersResponse from '@/types/UserResponse';
+
 import swrFetcher from '../utils/swrFetcher';
 
 interface UseSearchUsersResult {

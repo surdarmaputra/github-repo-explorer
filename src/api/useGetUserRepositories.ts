@@ -1,6 +1,7 @@
 import useSWR, { SWRResponse } from 'swr';
 
-import { Repository } from '../types';
+import Repository from '@/types/Repository';
+
 import swrFetcher from '../utils/swrFetcher';
 
 interface UseGetUserRepositoriesResult {

@@ -1,7 +1,9 @@
-name: Validate PR
+name: Deployment
 
 on:
-  - pull_request
+  push:
+    branches:
+      - main
 
 jobs:
   install-dependencies:
@@ -40,3 +42,9 @@ jobs:
         uses: ./.github/actions/cache-dependencies
       - name: Test
         run: yarn test:coverage
+  deploy:
+    needs: [lint, test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger deployment
+        run: curl -X POST ${{ secrets.DEPLOYMENT_WEB_HOOK_URL }}
