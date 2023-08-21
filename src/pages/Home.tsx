@@ -59,7 +59,10 @@ export default function Home() {
       {isError && <GeneralRequestErrorAlert onRetry={refetchUsers} />}
 
       {Boolean(usernames?.length) && (
-        <UserRepositoriesGroups usernames={usernames} />
+        <UserRepositoriesGroups
+          keyword={searchFilters?.keyword}
+          usernames={usernames}
+        />
       )}
     </Flex>
   );
