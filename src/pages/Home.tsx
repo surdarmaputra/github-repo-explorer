@@ -5,6 +5,7 @@ import { Alert, Flex, Text, Title } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconAlertCircle } from '@tabler/icons-react';
 
+import ScrollToTop from '@/components/ScrollToTop';
 import UserSearchFormValue from '@/types/form/UserSearchFormValue';
 
 import useSearchUsers from '../api/useSearchUsers';
@@ -78,6 +79,8 @@ export default function Home() {
       {Boolean(usernames?.length) && (
         <UserRepositoriesGroups keyword={keyword || ''} usernames={usernames} />
       )}
+
+      <ScrollToTop />
     </Flex>
   );
 }
