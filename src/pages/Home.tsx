@@ -5,16 +5,15 @@ import { useMediaQuery } from '@mantine/hooks';
 
 import useSearchUsers from '../api/useSearchUsers';
 import UserRepositoriesGroups from '../components/UserRepositoriesGroups';
-import UserSearchForm, {
-  UserSearchFormValue,
-} from '../components/UserSearchForm';
+import UserSearchForm from '../components/UserSearchForm';
+import { UserSearchFormValue } from '../types';
 
 export default function Home() {
   const largeScreen = useMediaQuery('(min-width: 480px)');
   const [searchFilters, setSearchFilters] = useState<UserSearchFormValue>({
     keyword: '',
   });
-  const { users } = useSearchUsers(searchFilters.keyword);
+  const { users, isUsersLoading } = useSearchUsers(searchFilters.keyword);
   const usernames = users?.map(({ login }) => login);
 
   return (
@@ -29,7 +28,11 @@ export default function Home() {
       w={largeScreen ? '480px' : '100%'}
       wrap="wrap"
     >
-      <UserSearchForm onChange={setSearchFilters} value={searchFilters} />
+      <UserSearchForm
+        isLoading={isUsersLoading}
+        onChange={setSearchFilters}
+        value={searchFilters}
+      />
       <UserRepositoriesGroups usernames={usernames} />
     </Flex>
   );

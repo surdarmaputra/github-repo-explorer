@@ -13,3 +13,7 @@ export interface UserRepositoriesGroup {
   username: string;
   repositories: Repository[];
 }
+
+export interface UserSearchFormValue {
+  keyword: string;
+}
