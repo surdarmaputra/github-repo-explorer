@@ -63,12 +63,14 @@ export default function UserRepositoriesGroup({
                 name,
                 description,
                 stargazers_count: stargazersCount,
+                html_url: url,
               }) => (
                 <RepositoryCard
                   description={description}
                   key={id}
                   name={name}
                   stargazersCount={stargazersCount}
+                  url={url}
                 />
               ),
             )}

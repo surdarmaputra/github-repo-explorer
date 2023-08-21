@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { Alert, Flex } from '@mantine/core';
+import { Alert, Flex, Text } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconAlertCircle } from '@tabler/icons-react';
 
@@ -49,7 +49,10 @@ export default function Home() {
           title="No Result"
           w="100%"
         >
-          Please try another username.
+          <Text color="gray.6">
+            Nothing found for &quot;{searchFilters?.keyword}&quot;. Please try
+            another username.
+          </Text>
         </Alert>
       )}
 
