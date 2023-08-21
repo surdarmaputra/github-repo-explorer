@@ -10,6 +10,7 @@ const useStyles = createStyles((theme) => ({
   },
   control: {
     backgroundColor: theme.colors.gray[1],
+    borderRadius: theme.radius.sm,
   },
   content: {
     backgroundColor: theme.colors.white,

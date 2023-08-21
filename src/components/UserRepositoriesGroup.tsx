@@ -1,4 +1,4 @@
-import { Accordion, Alert, Flex, Skeleton } from '@mantine/core';
+import { Accordion, Alert, Flex, Skeleton, Text } from '@mantine/core';
 import { IconAlertCircle } from '@tabler/icons-react';
 
 import useGetUserRepositories from '../api/useGetUserRepositories';
@@ -48,7 +48,7 @@ export default function UserRepositoriesGroup({
 
           {isEmptyResult && (
             <Alert color="gray" icon={<IconAlertCircle size="1rem" />}>
-              No repository
+              <Text color="gray.7">No repository</Text>
             </Alert>
           )}
 
