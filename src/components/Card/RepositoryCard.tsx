@@ -1,7 +1,7 @@
 import { Card, Flex, Text } from '@mantine/core';
 import { IconStarFilled } from '@tabler/icons-react';
 
-import { Repository } from '../../types';
+import { Repository } from '@/types';
 
 export interface RepositoryCardProps {
   name: Repository['name'];
