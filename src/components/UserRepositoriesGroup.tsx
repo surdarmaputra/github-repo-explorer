@@ -20,6 +20,7 @@ export default function UserRepositoriesGroup({
     refetchRepositories,
     repositoriesError,
   } = useGetUserRepositories(isActive ? username : '');
+
   const isError = !isRepositoriesLoading && Boolean(repositoriesError);
   const isEmptyResult =
     !isRepositoriesLoading &&

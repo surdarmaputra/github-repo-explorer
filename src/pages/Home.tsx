@@ -18,6 +18,7 @@ export default function Home() {
   const { users, isUsersLoading, usersError, refetchUsers } = useSearchUsers(
     searchFilters.keyword,
   );
+
   const usernames = users?.map(({ login }) => login);
   const isError = !isUsersLoading && Boolean(usersError);
   const isEmptyResult =
