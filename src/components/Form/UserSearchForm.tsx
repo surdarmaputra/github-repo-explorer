@@ -16,7 +16,7 @@ export default function UserSearchForm({
   onChange,
   value,
 }: UserSearchFormProps) {
-  const [keyword, setKeyword] = useState(value?.keyword || '');
+  const [keyword, setKeyword] = useState<string>(value?.keyword || '');
 
   const applyFilters = () => {
     if (typeof onChange === 'function') {
