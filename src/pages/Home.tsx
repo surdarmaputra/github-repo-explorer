@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { Alert, Flex, Text } from '@mantine/core';
+import { Alert, Flex, Text, Title } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconAlertCircle } from '@tabler/icons-react';
 
@@ -36,6 +36,15 @@ export default function Home() {
       w={isLargeScreen ? '480px' : '100%'}
       wrap="wrap"
     >
+      <Title align="center" size="h1">
+        <Text color="blue.8" display="inline" size="md">
+          GitHub Repo
+        </Text>
+        <Text color="gray.8" display="inline" size="md">
+          &nbsp;Explorer
+        </Text>
+      </Title>
+
       <UserSearchForm
         isLoading={isUsersLoading}
         onChange={setSearchFilters}
