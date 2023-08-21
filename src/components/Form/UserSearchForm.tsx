@@ -1,9 +1,12 @@
-import { useState } from 'react';
+// import { useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
 
 import { Button, Flex, Input } from '@mantine/core';
 import { IconSearch } from '@tabler/icons-react';
 
 import { UserSearchFormValue } from '@/types';
+
+import FullWidthForm from './FullWidthForm';
 
 export interface UserSearchFormProps {
   isLoading?: boolean;
@@ -16,36 +19,47 @@ export default function UserSearchForm({
   onChange,
   value,
 }: UserSearchFormProps) {
-  const [keyword, setKeyword] = useState<string>(value?.keyword || '');
+  const {
+    formState: { errors },
+    register,
+    handleSubmit,
+  } = useForm<UserSearchFormValue>({
+    defaultValues: value,
+  });
 
-  const applyFilters = () => {
+  const onSubmit: SubmitHandler<UserSearchFormValue> = (formData) => {
     if (typeof onChange === 'function') {
-      onChange({
-        keyword,
-      });
+      onChange(formData);
     }
   };
 
   return (
-    <Flex align="center" direction="column" gap="xs" mb="xs" w="100%">
-      <Input
-        disabled={isLoading}
-        onChange={(event) => setKeyword(event?.target?.value)}
-        placeholder="Enter username"
-        size="md"
-        value={keyword}
-        variant="filled"
-        w="100%"
-      />
-      <Button
-        leftIcon={<IconSearch size={16} />}
-        loading={isLoading}
-        onClick={applyFilters}
-        size="md"
-        w="100%"
-      >
-        Search
-      </Button>
-    </Flex>
+    <FullWidthForm onSubmit={handleSubmit(onSubmit)}>
+      <Flex align="left" direction="column" gap="xs" mb="xs" w="100%">
+        <Input
+          disabled={isLoading}
+          placeholder="Enter username"
+          size="md"
+          variant="filled"
+          w="100%"
+          {...{ ...register('keyword', { required: true, minLength: 3 }) }}
+        />
+        {errors?.keyword?.type === 'required' && (
+          <Input.Error>Please enter username</Input.Error>
+        )}
+        {errors?.keyword?.type === 'minLength' && (
+          <Input.Error>Please enter min. 3 characters</Input.Error>
+        )}
+        <Button
+          leftIcon={<IconSearch size={16} />}
+          loading={isLoading}
+          size="md"
+          type="submit"
+          w="100%"
+        >
+          Search
+        </Button>
+      </Flex>
+    </FullWidthForm>
   );
 }
