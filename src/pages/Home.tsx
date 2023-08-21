@@ -1,12 +1,21 @@
-import { Button, Flex, Input } from '@mantine/core';
-import { useMediaQuery } from '@mantine/hooks';
-import { IconSearch } from '@tabler/icons-react';
+import { useState } from 'react';
 
-import userRepositoriesGroups from '../components/__mocks__/userRepositoriesGroups';
+import { Flex } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
+
+import useSearchUsers from '../api/useSearchUsers';
 import UserRepositoriesGroups from '../components/UserRepositoriesGroups';
+import UserSearchForm, {
+  UserSearchFormValue,
+} from '../components/UserSearchForm';
 
 export default function Home() {
   const largeScreen = useMediaQuery('(min-width: 480px)');
+  const [searchFilters, setSearchFilters] = useState<UserSearchFormValue>({
+    keyword: '',
+  });
+  const { users } = useSearchUsers(searchFilters.keyword);
+  const usernames = users?.map(({ login }) => login);
 
   return (
     <Flex
@@ -20,18 +29,8 @@ export default function Home() {
       w={largeScreen ? '480px' : '100%'}
       wrap="wrap"
     >
-      <Flex align="center" direction="column" gap="xs" mb="xs" w="100%">
-        <Input
-          placeholder="Enter username"
-          size="md"
-          variant="filled"
-          w="100%"
-        />
-        <Button leftIcon={<IconSearch size={16} />} size="md" w="100%">
-          Search
-        </Button>
-      </Flex>
-      <UserRepositoriesGroups groups={userRepositoriesGroups} />
+      <UserSearchForm onChange={setSearchFilters} value={searchFilters} />
+      <UserRepositoriesGroups usernames={usernames} />
     </Flex>
   );
 }

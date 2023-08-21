@@ -4,6 +4,11 @@ export interface Repository {
   stars: number;
 }
 
+export interface User {
+  id: number;
+  login: string;
+}
+
 export interface UserRepositoriesGroup {
   username: string;
   repositories: Repository[];
