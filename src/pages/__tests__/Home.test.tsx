@@ -1,3 +1,5 @@
+import { MemoryRouter } from 'react-router-dom';
+
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -6,7 +8,11 @@ import usersResponse from '@/__mocks__/usersResponse';
 import Home from '../Home';
 
 function setup() {
-  return render(<Home />);
+  return render(
+    <MemoryRouter initialEntries={['/']}>
+      <Home />
+    </MemoryRouter>,
+  );
 }
 
 describe('Home', () => {

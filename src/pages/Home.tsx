@@ -1,9 +1,11 @@
-import { useState } from 'react';
+// import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 import { Alert, Flex, Text, Title } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconAlertCircle } from '@tabler/icons-react';
 
+import ScrollToTop from '@/components/ScrollToTop';
 import UserSearchFormValue from '@/types/form/UserSearchFormValue';
 
 import useSearchUsers from '../api/useSearchUsers';
@@ -13,17 +15,23 @@ import UserRepositoriesGroups from '../components/UserRepositoriesGroups';
 
 export default function Home() {
   const isLargeScreen = useMediaQuery('(min-width: 480px)');
-  const [searchFilters, setSearchFilters] = useState<UserSearchFormValue>({
-    keyword: '',
-  });
+  const [searchParams, setSearchParams] = useSearchParams();
+  const keyword = decodeURIComponent(searchParams.get('keyword') || '');
   const { users, isUsersLoading, usersError, refetchUsers } = useSearchUsers(
-    searchFilters.keyword,
+    keyword || '',
   );
 
   const usernames = users?.map(({ login }) => login) || [];
   const isError = !isUsersLoading && Boolean(usersError);
   const isEmptyResult =
     !isUsersLoading && !isError && Array.isArray(users) && !users.length;
+
+  const handleUserSearchFormChange = (formData: UserSearchFormValue) => {
+    if (keyword !== formData?.keyword) {
+      const encodedKeyword = encodeURIComponent(formData?.keyword);
+      setSearchParams(`keyword=${encodedKeyword}`);
+    }
+  };
 
   return (
     <Flex
@@ -48,8 +56,8 @@ export default function Home() {
 
       <UserSearchForm
         isLoading={isUsersLoading}
-        onChange={setSearchFilters}
-        value={searchFilters}
+        onChange={handleUserSearchFormChange}
+        value={{ keyword: keyword || '' }}
       />
 
       {isEmptyResult && (
@@ -60,8 +68,8 @@ export default function Home() {
           w="100%"
         >
           <Text color="gray.6">
-            Nothing found for &quot;{searchFilters?.keyword}&quot;. Please try
-            another username.
+            Nothing found for &quot;{keyword}&quot;. Please try another
+            username.
           </Text>
         </Alert>
       )}
@@ -69,11 +77,10 @@ export default function Home() {
       {isError && <GeneralRequestErrorAlert onRetry={refetchUsers} />}
 
       {Boolean(usernames?.length) && (
-        <UserRepositoriesGroups
-          keyword={searchFilters?.keyword}
-          usernames={usernames}
-        />
+        <UserRepositoriesGroups keyword={keyword || ''} usernames={usernames} />
       )}
+
+      <ScrollToTop />
     </Flex>
   );
 }
