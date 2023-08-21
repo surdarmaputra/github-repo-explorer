@@ -6,10 +6,11 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
+    'plugin:testing-library/react',
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs'],
   parser: '@typescript-eslint/parser',
-  plugins: ['react', 'react-refresh', 'simple-import-sort'],
+  plugins: ['react', 'react-refresh', 'simple-import-sort', 'testing-library'],
   rules: {
     '@typescript-eslint/comma-dangle': ['error', 'always-multiline'],
     '@typescript-eslint/member-delimiter-style': [
