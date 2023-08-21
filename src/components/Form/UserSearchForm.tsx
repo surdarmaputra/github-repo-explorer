@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 import { Button, Flex, Input } from '@mantine/core';
@@ -22,15 +23,18 @@ export default function UserSearchForm({
     formState: { errors },
     register,
     handleSubmit,
-  } = useForm<UserSearchFormValue>({
-    defaultValues: value,
-  });
+    reset,
+  } = useForm<UserSearchFormValue>();
 
   const onSubmit: SubmitHandler<UserSearchFormValue> = (formData) => {
     if (typeof onChange === 'function') {
       onChange(formData);
     }
   };
+
+  useEffect(() => {
+    reset(value);
+  }, [reset, value]);
 
   return (
     <FullWidthForm onSubmit={handleSubmit(onSubmit)}>

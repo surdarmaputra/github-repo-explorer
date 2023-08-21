@@ -1,11 +1,11 @@
-import { MantineProvider } from '@mantine/core';
+import { Outlet } from 'react-router-dom';
 
-import Home from './pages/Home';
+import { MantineProvider } from '@mantine/core';
 
 function App() {
   return (
     <MantineProvider withGlobalStyles withNormalizeCSS>
-      <Home />
+      <Outlet />
     </MantineProvider>
   );
 }
