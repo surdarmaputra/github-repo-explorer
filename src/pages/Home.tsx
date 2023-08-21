@@ -10,6 +10,8 @@ import UserSearchForm from '../components/Form/UserSearchForm';
 import UserRepositoriesGroups from '../components/UserRepositoriesGroups';
 import { UserSearchFormValue } from '../types';
 
+console.log('aa');
+
 export default function Home() {
   const isLargeScreen = useMediaQuery('(min-width: 480px)');
   const [searchFilters, setSearchFilters] = useState<UserSearchFormValue>({
@@ -46,7 +48,7 @@ export default function Home() {
         <Alert
           color="gray"
           icon={<IconAlertCircle size="1rem" />}
-          title="No Result"
+          title="No XResult"
           w="100%"
         >
           Please try another username.
