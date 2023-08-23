@@ -14,6 +14,17 @@ function setup(props: UserRepositoriesGroupsProps) {
   return render(<UserRepositoriesGroups {...props} />);
 }
 
+beforeAll(() => {
+  const intersectionObserverMock = () => ({
+    observe: jest.fn(),
+    disconnect: jest.fn(),
+    unobserve: jest.fn(),
+  });
+  window.IntersectionObserver = jest
+    .fn()
+    .mockImplementation(intersectionObserverMock);
+});
+
 describe('UserRepositoriesGroups', () => {
   test('render correct amount of group', async () => {
     setup({ keyword: keywordMock, usernames: usernamesMock });

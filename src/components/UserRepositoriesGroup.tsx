@@ -1,9 +1,16 @@
-import { Accordion, Alert, Flex, Skeleton, Text } from '@mantine/core';
+import { useEffect, useRef } from 'react';
+
+import { Accordion, Alert, Flex, Text } from '@mantine/core';
+import { useIntersection } from '@mantine/hooks';
 import { IconAlertCircle } from '@tabler/icons-react';
+
+import Repository from '@/types/Repository';
 
 import useGetUserRepositories from '../api/useGetUserRepositories';
 import GeneralRequestErrorAlert from './Alert/GeneralRequestErrorAlert';
 import RepositoryCard from './Card/RepositoryCard';
+import FlashedText from './FlashedText';
+import RepositoryCardsSkeleton from './Skeleton/RepositoryCardsSkeleton';
 
 export interface UserRepositoriesGroupProps {
   isActive: boolean;
@@ -14,19 +21,62 @@ export default function UserRepositoriesGroup({
   isActive,
   username,
 }: UserRepositoriesGroupProps) {
+  const isPaginating = useRef(false);
+
+  const { ref, entry } = useIntersection({
+    root: null,
+    threshold: 1,
+  });
+
   const {
     repositories,
     isRepositoriesLoading,
+    isRepositoriesValidating,
     refetchRepositories,
     repositoriesError,
+    setRepositoriesSize,
+    repositoriesSize,
   } = useGetUserRepositories(isActive ? username : '');
 
+  const flattenRepositories: Repository[] | undefined = repositories?.flat();
   const isError = !isRepositoriesLoading && Boolean(repositoriesError);
   const isEmptyResult =
-    !isRepositoriesLoading &&
     !isError &&
-    Array.isArray(repositories) &&
-    !repositories.length;
+    !isRepositoriesLoading &&
+    Array.isArray(flattenRepositories) &&
+    !flattenRepositories.length;
+  const hasResult = !isError && Boolean(flattenRepositories?.length);
+  const hasReachEndOfPagination =
+    !isError &&
+    repositories?.length &&
+    repositories?.length > 1 &&
+    !repositories?.[repositories.length - 1].length;
+  const isPaginationObserverVisible =
+    hasResult && !isRepositoriesValidating && !hasReachEndOfPagination;
+
+  useEffect(() => {
+    if (
+      entry?.isIntersecting &&
+      !isRepositoriesLoading &&
+      !isRepositoriesValidating &&
+      !isPaginating.current
+    ) {
+      setRepositoriesSize(repositoriesSize + 1);
+      isPaginating.current = true;
+    }
+  }, [
+    entry?.isIntersecting,
+    isRepositoriesLoading,
+    isRepositoriesValidating,
+    repositoriesSize,
+    setRepositoriesSize,
+  ]);
+
+  useEffect(() => {
+    if (isPaginating.current && !isRepositoriesValidating) {
+      isPaginating.current = false;
+    }
+  }, [isRepositoriesValidating]);
 
   if (!username) return null;
 
@@ -39,12 +89,7 @@ export default function UserRepositoriesGroup({
       <Accordion.Control>{username}</Accordion.Control>
       <Accordion.Panel>
         <Flex direction="column" gap="xs" mt="xs">
-          {isRepositoriesLoading && (
-            <>
-              <Skeleton bg="gray.1" height={64} radius="xs" />
-              <Skeleton height={64} radius="xs" />
-            </>
-          )}
+          {isRepositoriesLoading && <RepositoryCardsSkeleton />}
 
           {isEmptyResult && (
             <Alert color="gray" icon={<IconAlertCircle size="1rem" />}>
@@ -56,8 +101,8 @@ export default function UserRepositoriesGroup({
             <GeneralRequestErrorAlert onRetry={refetchRepositories} />
           )}
 
-          {Boolean(repositories?.length) &&
-            repositories?.map(
+          {hasResult &&
+            flattenRepositories?.map(
               ({
                 id,
                 name,
@@ -74,6 +119,22 @@ export default function UserRepositoriesGroup({
                 />
               ),
             )}
+
+          {isPaginationObserverVisible && <div ref={ref}></div>}
+
+          {hasResult && isRepositoriesValidating && <RepositoryCardsSkeleton />}
+
+          {hasReachEndOfPagination && (
+            <FlashedText
+              align="center"
+              color="gray.5"
+              mb="-1rem"
+              mt="-0.25rem"
+              size="xs"
+            >
+              All data loaded
+            </FlashedText>
+          )}
         </Flex>
       </Accordion.Panel>
     </Accordion.Item>
