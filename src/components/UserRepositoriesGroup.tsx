@@ -1,8 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-import { keyframes } from '@emotion/react';
-import styled from '@emotion/styled';
-import { Accordion, Alert, Flex, Text, TextProps } from '@mantine/core';
+import { Accordion, Alert, Flex, Text } from '@mantine/core';
 import { useIntersection } from '@mantine/hooks';
 import { IconAlertCircle } from '@tabler/icons-react';
 
@@ -11,21 +9,8 @@ import Repository from '@/types/Repository';
 import useGetUserRepositories from '../api/useGetUserRepositories';
 import GeneralRequestErrorAlert from './Alert/GeneralRequestErrorAlert';
 import RepositoryCard from './Card/RepositoryCard';
+import FlashedText from './FlashedText';
 import RepositoryCardsSkeleton from './Skeleton/RepositoryCardsSkeleton';
-
-const hide = keyframes`
-  0% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0;
-  }
-`;
-
-const StyledHiddenText = styled(Text)<TextProps>`
-  animation: ${hide} 3s forwards;
-`;
 
 export interface UserRepositoriesGroupProps {
   isActive: boolean;
@@ -140,7 +125,7 @@ export default function UserRepositoriesGroup({
           {hasResult && isRepositoriesValidating && <RepositoryCardsSkeleton />}
 
           {hasReachEndOfPagination && (
-            <StyledHiddenText
+            <FlashedText
               align="center"
               color="gray.5"
               mb="-1rem"
@@ -148,7 +133,7 @@ export default function UserRepositoriesGroup({
               size="xs"
             >
               All data loaded
-            </StyledHiddenText>
+            </FlashedText>
           )}
         </Flex>
       </Accordion.Panel>
